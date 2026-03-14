@@ -22,8 +22,10 @@ function ScrollToTop() {
 }
 
 function App() {
+  const basename = (import.meta.env.BASE_URL ?? '').replace(/\/$/, '') || '/';
+
   return (
-    <Router basename="/ipengpro-website">
+    <Router basename={basename}>
       <ScrollToTop />
       <div className="min-h-screen">
         <Routes>
