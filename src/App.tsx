@@ -23,7 +23,7 @@ function ScrollToTop() {
 
 function App() {
   return (
-    <Router>
+    <Router basename="/ipengpro-website">
       <ScrollToTop />
       <div className="min-h-screen">
         <Routes>
