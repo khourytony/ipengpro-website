@@ -42,9 +42,9 @@ This message was sent from the IP Engineering Pro website contact form.
     if (!mailgunApiKey) {
       console.error('MAILGUN_API_KEY is not set');
       return new Response(
-        JSON.stringify({ success: true, message: 'Form submitted successfully' }),
+        JSON.stringify({ success: false, error: 'Mail service is not configured' }),
         {
-          status: 200,
+          status: 500,
           headers: {
             ...corsHeaders,
             'Content-Type': 'application/json',
@@ -75,9 +75,9 @@ This message was sent from the IP Engineering Pro website contact form.
       const errorText = await response.text();
       console.error('Mailgun error:', errorText);
       return new Response(
-        JSON.stringify({ success: true, message: 'Form submitted successfully' }),
+        JSON.stringify({ success: false, error: 'Failed to send email' }),
         {
-          status: 200,
+          status: 500,
           headers: {
             ...corsHeaders,
             'Content-Type': 'application/json',
