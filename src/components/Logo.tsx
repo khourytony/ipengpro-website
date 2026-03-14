@@ -1,3 +1,5 @@
+import logoImage from '/logo ip eng pro final-2-reverse (1).png';
+
 interface LogoProps {
   className?: string;
 }
@@ -6,7 +8,7 @@ export default function Logo({ className = '' }: LogoProps) {
   return (
     <div className={`flex items-center gap-3 ${className}`}>
       <img
-        src="/logo ip eng pro final-2-reverse (1).png"
+        src={logoImage}
         alt="IP Engineering Pro Logo"
         className="h-12 w-auto object-contain"
       />
