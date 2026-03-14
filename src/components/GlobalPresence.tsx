@@ -91,13 +91,6 @@ export default function GlobalPresence() {
     setIsSubmitting(true);
     setSubmitStatus('idle');
 
-    if (!isSupabaseConfigured) {
-      setSubmitStatus('error');
-      setIsSubmitting(false);
-      console.error('Supabase is not configured for form submissions.');
-      return;
-    }
-
     try {
       await submitContactForm(formData);
       setSubmitStatus('success');
@@ -322,13 +315,13 @@ export default function GlobalPresence() {
 
               {!isSupabaseConfigured && (
                 <div className="flex items-center gap-2 p-4 bg-yellow-500/10 border border-yellow-500/20 rounded-lg text-yellow-300">
-                  <span>The contact form is temporarily unavailable. Please email info@ipengpro.com.</span>
+                  <span>Messages are sent directly to info@ipengpro.com while our submission database is offline.</span>
                 </div>
               )}
 
               <button
                 type="submit"
-                disabled={isSubmitting || !isSupabaseConfigured}
+                disabled={isSubmitting}
                 className="w-full px-6 py-4 bg-gradient-to-r from-ipeng-light to-ipeng-navy text-white font-semibold rounded-lg hover:from-ipeng-light hover:to-ipeng-blue transition-all duration-300 shadow-lg shadow-ipeng-light/30 hover:shadow-ipeng-light/50 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 group"
               >
                 {isSubmitting ? (

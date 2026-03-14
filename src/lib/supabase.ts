@@ -18,31 +18,59 @@ export interface ContactSubmission {
   message: string;
 }
 
+const sendViaFormSubmit = async (data: ContactSubmission) => {
+  const response = await fetch('https://formsubmit.co/ajax/info@ipengpro.com', {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      ...data,
+      _replyto: data.email,
+      _subject: `New Contact Form Submission from ${data.name}`,
+    }),
+  });
+
+  if (!response.ok) {
+    const errorText = await response.text();
+    throw new Error(`Fallback submission failed: ${errorText}`);
+  }
+};
+
 export const submitContactForm = async (data: ContactSubmission) => {
-  if (!supabase || !supabaseUrl || !supabaseAnonKey) {
-    throw new Error('Contact form is temporarily unavailable.');
+  let emailDelivered = false;
+
+  if (supabase && supabaseUrl && supabaseAnonKey) {
+    try {
+      const { error } = await supabase.from('contact_submissions').insert([data]);
+
+      if (error) {
+        throw error;
+      }
+
+      const apiUrl = `${supabaseUrl}/functions/v1/send-contact-email`;
+      const response = await fetch(apiUrl, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${supabaseAnonKey}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      const payload = await response.json().catch(() => null);
+      emailDelivered = response.ok && payload?.success !== false;
+
+      if (!emailDelivered) {
+        console.error('Supabase email delivery failed:', payload);
+      }
+    } catch (error) {
+      console.error('Supabase submission failed, falling back to direct email:', error);
+    }
   }
 
-  const { data: result, error } = await supabase
-    .from('contact_submissions')
-    .insert([data])
-    .select();
-
-  if (error) throw error;
-
-  try {
-    const apiUrl = `${supabaseUrl}/functions/v1/send-contact-email`;
-    await fetch(apiUrl, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${supabaseAnonKey}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(data),
-    });
-  } catch (emailError) {
-    console.error('Failed to send email notification:', emailError);
+  if (!emailDelivered) {
+    await sendViaFormSubmit(data);
   }
-
-  return result;
 };
