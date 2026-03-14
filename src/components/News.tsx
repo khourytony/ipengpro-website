@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Calendar, Tag } from 'lucide-react';
-import { supabase } from '../lib/supabase';
+import { supabase, isSupabaseConfigured } from '../lib/supabase';
 
 interface NewsItem {
   id: string;
@@ -16,12 +16,25 @@ interface NewsItem {
 export default function News() {
   const [news, setNews] = useState<NewsItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   useEffect(() => {
+    if (!isSupabaseConfigured || !supabase) {
+      setErrorMessage('News is temporarily unavailable.');
+      setLoading(false);
+      return;
+    }
+
     fetchNews();
   }, []);
 
   const fetchNews = async () => {
+    if (!supabase) {
+      setErrorMessage('News is temporarily unavailable.');
+      setLoading(false);
+      return;
+    }
+
     try {
       const { data, error } = await supabase
         .from('news')
@@ -33,6 +46,7 @@ export default function News() {
       setNews(data || []);
     } catch (error) {
       console.error('Error fetching news:', error);
+      setErrorMessage('News is temporarily unavailable.');
     } finally {
       setLoading(false);
     }
@@ -67,63 +81,69 @@ export default function News() {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {news.map((item) => (
-            <article
-              key={item.id}
-              className="group bg-white/5 backdrop-blur-sm rounded-lg overflow-hidden border border-white/10 hover:border-ipeng-blue/50 transition-all duration-300 hover:transform hover:scale-[1.02]"
-            >
-              {item.image_url && (
-                <div className="relative h-48 overflow-hidden">
-                  <img
-                    src={item.image_url}
-                    alt={item.title}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                  />
-                  {item.is_featured && (
-                    <div className="absolute top-4 right-4 bg-ipeng-blue text-white text-xs font-bold px-3 py-1 rounded-full">
-                      FEATURED
+        {errorMessage ? (
+          <div className="text-center text-ipeng-light">{errorMessage}</div>
+        ) : (
+          <>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {news.map((item) => (
+                <article
+                  key={item.id}
+                  className="group bg-white/5 backdrop-blur-sm rounded-lg overflow-hidden border border-white/10 hover:border-ipeng-blue/50 transition-all duration-300 hover:transform hover:scale-[1.02]"
+                >
+                  {item.image_url && (
+                    <div className="relative h-48 overflow-hidden">
+                      <img
+                        src={item.image_url}
+                        alt={item.title}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                      />
+                      {item.is_featured && (
+                        <div className="absolute top-4 right-4 bg-ipeng-blue text-white text-xs font-bold px-3 py-1 rounded-full">
+                          FEATURED
+                        </div>
+                      )}
                     </div>
                   )}
-                </div>
-              )}
 
-              <div className="p-6">
-                <div className="flex items-center gap-4 mb-3 text-sm text-ipeng-light">
-                  <div className="flex items-center gap-1">
-                    <Calendar className="w-4 h-4" />
-                    <span>{formatDate(item.published_date)}</span>
-                  </div>
-                  {item.category && (
-                    <div className="flex items-center gap-1">
-                      <Tag className="w-4 h-4" />
-                      <span>{item.category}</span>
+                  <div className="p-6">
+                    <div className="flex items-center gap-4 mb-3 text-sm text-ipeng-light">
+                      <div className="flex items-center gap-1">
+                        <Calendar className="w-4 h-4" />
+                        <span>{formatDate(item.published_date)}</span>
+                      </div>
+                      {item.category && (
+                        <div className="flex items-center gap-1">
+                          <Tag className="w-4 h-4" />
+                          <span>{item.category}</span>
+                        </div>
+                      )}
                     </div>
-                  )}
-                </div>
 
-                <h3 className="text-xl font-bold text-white mb-3 group-hover:text-ipeng-blue transition-colors">
-                  {item.title}
-                </h3>
+                    <h3 className="text-xl font-bold text-white mb-3 group-hover:text-ipeng-blue transition-colors">
+                      {item.title}
+                    </h3>
 
-                <p className="text-ipeng-light leading-relaxed line-clamp-3">
-                  {item.description}
-                </p>
+                    <p className="text-ipeng-light leading-relaxed line-clamp-3">
+                      {item.description}
+                    </p>
 
-                {item.author && (
-                  <div className="mt-4 pt-4 border-t border-white/10">
-                    <p className="text-sm text-ipeng-light">By {item.author}</p>
+                    {item.author && (
+                      <div className="mt-4 pt-4 border-t border-white/10">
+                        <p className="text-sm text-ipeng-light">By {item.author}</p>
+                      </div>
+                    )}
                   </div>
-                )}
+                </article>
+              ))}
+            </div>
+
+            {news.length === 0 && (
+              <div className="text-center text-ipeng-light">
+                No news items available at this time.
               </div>
-            </article>
-          ))}
-        </div>
-
-        {news.length === 0 && (
-          <div className="text-center text-ipeng-light">
-            No news items available at this time.
-          </div>
+            )}
+          </>
         )}
       </div>
     </section>
