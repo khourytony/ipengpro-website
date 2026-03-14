@@ -48,7 +48,7 @@ This site is automatically deployed to GitHub Pages when changes are pushed to t
 The site is configured to deploy to: `https://khourytony.github.io/ipengpro-website/`
 
 Key configurations:
-- `vite.config.ts` has `base: '/ipengpro-website/'` set for correct asset paths
+- `vite.config.ts` now auto-detects GitHub Pages builds (via `GITHUB_ACTIONS`) and sets the base path to the repository name; other builds use `/` by default. You can override with `BASE_PATH` if needed.
 - `.github/workflows/deploy.yml` handles automatic deployment
 - `public/404.html` and redirect script in `index.html` enable client-side routing
 
