@@ -1,6 +1,6 @@
 import { useState, FormEvent } from 'react';
 import { MapPin, Phone, Mail, Clock, Globe, Send, CheckCircle } from 'lucide-react';
-import { submitContactForm } from '../lib/supabase';
+import { submitContactForm, isSupabaseConfigured } from '../lib/supabase';
 
 interface Location {
   id: string;
@@ -90,6 +90,13 @@ export default function GlobalPresence() {
     e.preventDefault();
     setIsSubmitting(true);
     setSubmitStatus('idle');
+
+    if (!isSupabaseConfigured) {
+      setSubmitStatus('error');
+      setIsSubmitting(false);
+      console.error('Supabase is not configured for form submissions.');
+      return;
+    }
 
     try {
       await submitContactForm(formData);
@@ -313,9 +320,15 @@ export default function GlobalPresence() {
                 </div>
               )}
 
+              {!isSupabaseConfigured && (
+                <div className="flex items-center gap-2 p-4 bg-yellow-500/10 border border-yellow-500/20 rounded-lg text-yellow-300">
+                  <span>The contact form is temporarily unavailable. Please email info@ipengpro.com.</span>
+                </div>
+              )}
+
               <button
                 type="submit"
-                disabled={isSubmitting}
+                disabled={isSubmitting || !isSupabaseConfigured}
                 className="w-full px-6 py-4 bg-gradient-to-r from-ipeng-light to-ipeng-navy text-white font-semibold rounded-lg hover:from-ipeng-light hover:to-ipeng-blue transition-all duration-300 shadow-lg shadow-ipeng-light/30 hover:shadow-ipeng-light/50 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 group"
               >
                 {isSubmitting ? (
