@@ -6,7 +6,7 @@ const infrastructureSolutions = [
     icon: Server,
     title: 'Data Center Facilities',
     description: 'Design, delivery, and management of enterprise-grade data centers with modular or traditional configurations. Tier-certified facilities with advanced cooling, power management, and flexible tenant configurations.',
-    image: '/1693228049_1679943811_OIG-website-thumbnail-image_command-and-control-C4IT.jpg',
+    image: `${import.meta.env.BASE_URL}1693228049_1679943811_OIG-website-thumbnail-image_command-and-control-C4IT.jpg`,
   },
   {
     icon: HardDrive,
@@ -30,7 +30,7 @@ const infrastructureSolutions = [
     icon: Database,
     title: 'Storage Solutions',
     description: 'All-flash NVMe and hybrid storage solutions for high-performance data access. Scalable and reliable storage infrastructure with advanced data protection, deduplication, and compression from NetApp, Pure Storage, and Dell EMC.',
-    image: '/close-up-illuminated-computer_1048944-29093318.jpg',
+    image: `${import.meta.env.BASE_URL}close-up-illuminated-computer_1048944-29093318.jpg`,
   },
   {
     icon: Archive,

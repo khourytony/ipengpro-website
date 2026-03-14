@@ -8,7 +8,7 @@ const features = [
     description: 'AI-powered orchestration seamlessly integrates edge computing with cloud infrastructure. Our intelligent systems automatically optimize data flow, resource allocation, and processing efficiency across your entire technology stack.',
     url: '/solutions/edge-to-cloud',
     highlights: ['Data Center', 'Private Cloud', 'HCI', 'VDI', 'Network Solutions'],
-    image: '/data-transfer-cloud-computing-technology-600nw-2161779273.jpg',
+    image: `${import.meta.env.BASE_URL}data-transfer-cloud-computing-technology-600nw-2161779273.jpg`,
   },
   {
     icon: Brain,

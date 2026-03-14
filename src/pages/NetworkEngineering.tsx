@@ -24,13 +24,13 @@ const networkSolutions = [
     icon: Shield,
     title: 'Network Security',
     description: 'Comprehensive network security with next-generation firewalls, intrusion prevention, micro-segmentation, and zero-trust architecture. Protect your perimeter and internal traffic with AI-driven threat intelligence.',
-    image: '/cyber-security-concept-digital-art_23-2151637760.jpg',
+    image: `${import.meta.env.BASE_URL}cyber-security-concept-digital-art_23-2151637760.jpg`,
   },
   {
     icon: Network,
     title: 'LAN/WAN Design & Deployment',
     description: 'End-to-end network design, implementation, and optimization for enterprise LAN and WAN environments. From topology planning to cabling, switching, and routing configuration tailored to your business needs.',
-    image: '/Network-Design-scaled.jpeg',
+    image: `${import.meta.env.BASE_URL}Network-Design-scaled.jpeg`,
   },
   {
     icon: Layers,
