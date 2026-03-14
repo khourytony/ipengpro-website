@@ -50,28 +50,17 @@ const fallbackNews: NewsItem[] = [
 ];
 
 export default function News() {
-  const [news, setNews] = useState<NewsItem[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [statusMessage, setStatusMessage] = useState<string | null>(null);
+  const [news, setNews] = useState<NewsItem[]>(fallbackNews);
 
   useEffect(() => {
     const supabaseReady = isSupabaseConfigured && Boolean(supabase);
-    if (!supabaseReady) {
-      setNews(fallbackNews);
-      setStatusMessage('Live feed unavailable - showing featured updates.');
-      setLoading(false);
-    } else {
+    if (supabaseReady) {
       fetchNews();
     }
   }, []);
 
   const fetchNews = async () => {
-    if (!supabase) {
-      setNews(fallbackNews);
-      setStatusMessage('Live feed unavailable - showing featured updates.');
-      setLoading(false);
-      return;
-    }
+    if (!supabase) return;
 
     try {
       const { data, error } = await supabase
@@ -84,17 +73,12 @@ export default function News() {
 
       if (data && data.length > 0) {
         setNews(data);
-        setStatusMessage(null);
       } else {
         setNews(fallbackNews);
-        setStatusMessage('Live news coming soon - sharing featured updates meanwhile.');
       }
     } catch (error) {
       console.error('Error fetching news:', error);
       setNews(fallbackNews);
-      setStatusMessage('Live news temporarily unavailable - showing featured updates.');
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -107,16 +91,6 @@ export default function News() {
     });
   };
 
-  if (loading) {
-    return (
-      <section id="news" className="py-24 bg-black">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center text-ipeng-light">Loading news...</div>
-        </div>
-      </section>
-    );
-  }
-
   return (
     <section id="news" className="py-24 bg-black">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -126,10 +100,6 @@ export default function News() {
             Stay updated with our latest projects, innovations, and industry insights
           </p>
         </div>
-
-        {statusMessage && (
-          <div className="text-center text-ipeng-light mb-10">{statusMessage}</div>
-        )}
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
           {news.map((item) => (
