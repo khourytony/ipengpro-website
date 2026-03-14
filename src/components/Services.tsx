@@ -5,37 +5,37 @@ const services = [
     icon: Network,
     title: 'Network Design & Implementation',
     description: 'Comprehensive network infrastructure planning, design, and deployment for enterprise environments.',
-    image: '/Network-Design-scaled.jpeg',
+    image: `${import.meta.env.BASE_URL}Network-Design-scaled.jpeg`,
   },
   {
     icon: Cloud,
     title: 'Cloud Solutions',
     description: 'End-to-end cloud migration, optimization, and management services across major cloud platforms.',
-    image: '/infovista_agentic_ai_homepage_banner.jpg',
+    image: `${import.meta.env.BASE_URL}infovista_agentic_ai_homepage_banner.jpg`,
   },
   {
     icon: Cpu,
     title: 'IoT Integration',
     description: 'Smart device integration and IoT ecosystem development for connected infrastructure solutions.',
-    image: '/web-4841856_1280.jpg',
+    image: `${import.meta.env.BASE_URL}web-4841856_1280.jpg`,
   },
   {
     icon: Shield,
     title: 'Cybersecurity',
     description: 'Advanced security solutions to protect your infrastructure from evolving threats and vulnerabilities.',
-    image: '/cyber-security-concept-digital-art_23-2151637760.jpg',
+    image: `${import.meta.env.BASE_URL}cyber-security-concept-digital-art_23-2151637760.jpg`,
   },
   {
     icon: Zap,
     title: 'Edge Computing',
     description: 'Deploy processing power closer to data sources for reduced latency and improved performance.',
-    image: '/cybersecurity-digital-background-3-min.png',
+    image: `${import.meta.env.BASE_URL}cybersecurity-digital-background-3-min.png`,
   },
   {
     icon: Settings,
     title: 'System Integration',
     description: 'Seamless integration of diverse systems and technologies into unified, efficient solutions.',
-    image: '/untitled-design-5.png',
+    image: `${import.meta.env.BASE_URL}untitled-design-5.png`,
   },
 ];
 

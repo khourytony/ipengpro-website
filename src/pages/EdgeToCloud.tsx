@@ -6,7 +6,7 @@ const edgeSolutions = [
     icon: Zap,
     title: 'Edge Computing',
     description: 'Deploy processing power at the network edge — closer to data sources — for ultra-low latency and real-time responsiveness. Ideal for IoT, manufacturing automation, smart retail, and mission-critical applications that cannot tolerate cloud round-trip delays.',
-    image: '/cybersecurity-digital-background-3-min.png',
+    image: `${import.meta.env.BASE_URL}cybersecurity-digital-background-3-min.png`,
   },
   {
     icon: Cloud,
@@ -18,7 +18,7 @@ const edgeSolutions = [
     icon: GitMerge,
     title: 'Hybrid & Multi-Cloud',
     description: 'Unified management across on-premises, private cloud, and multiple public clouds. Leverage the best of every environment with workload portability, unified security policies, and centralized governance across your entire hybrid estate.',
-    image: '/data-transfer-cloud-computing-technology-600nw-2161779273.jpg',
+    image: `${import.meta.env.BASE_URL}data-transfer-cloud-computing-technology-600nw-2161779273.jpg`,
   },
   {
     icon: Cpu,
@@ -36,7 +36,7 @@ const edgeSolutions = [
     icon: Lock,
     title: 'Cloud Security & Compliance',
     description: 'End-to-end cloud security including identity and access management, encryption, network segmentation, and continuous compliance monitoring. Meet GDPR, ISO 27001, SOC 2, and industry-specific regulatory requirements across all cloud environments.',
-    image: '/cyber-security-concept-digital-art_23-2151637760.jpg',
+    image: `${import.meta.env.BASE_URL}cyber-security-concept-digital-art_23-2151637760.jpg`,
   },
 ];
 
