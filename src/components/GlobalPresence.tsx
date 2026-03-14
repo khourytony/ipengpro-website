@@ -1,6 +1,6 @@
 import { useState, FormEvent } from 'react';
 import { MapPin, Phone, Mail, Clock, Globe, Send, CheckCircle } from 'lucide-react';
-import { submitContactForm, isSupabaseConfigured } from '../lib/supabase';
+import { submitContactForm } from '../lib/supabase';
 
 interface Location {
   id: string;
@@ -310,12 +310,6 @@ export default function GlobalPresence() {
               {submitStatus === 'error' && (
                 <div className="flex items-center gap-2 p-4 bg-red-500/10 border border-red-500/20 rounded-lg text-red-400">
                   <span>Something went wrong. Please try again.</span>
-                </div>
-              )}
-
-              {!isSupabaseConfigured && (
-                <div className="flex items-center gap-2 p-4 bg-yellow-500/10 border border-yellow-500/20 rounded-lg text-yellow-300">
-                  <span>Messages are sent directly to info@ipengpro.com while our submission database is offline.</span>
                 </div>
               )}
 
