@@ -13,24 +13,62 @@ interface NewsItem {
   is_featured: boolean;
 }
 
+const fallbackNews: NewsItem[] = [
+  {
+    id: 'fallback-1',
+    title: 'Edge-to-cloud observability rollout',
+    description:
+      'We’ve deployed unified telemetry across our edge fabrics and cloud control plane, unlocking faster incident response and predictive maintenance.',
+    image_url: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1200&q=80',
+    published_date: '2024-12-10',
+    category: 'Infrastructure',
+    author: 'IPENGPRO Engineering',
+    is_featured: true,
+  },
+  {
+    id: 'fallback-2',
+    title: 'AI-driven remediation playbooks',
+    description:
+      'New AI playbooks now automate containment and rollback for network anomalies, reducing mean time to recovery by over 40%.',
+    image_url: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?auto=format&fit=crop&w=1200&q=80',
+    published_date: '2024-11-18',
+    category: 'Automation',
+    author: 'Reliability Team',
+    is_featured: false,
+  },
+  {
+    id: 'fallback-3',
+    title: 'Private 5G lab expansion',
+    description:
+      'Our private 5G lab now mirrors production-grade slices for low-latency robotics, enabling safer pilots for industrial customers.',
+    image_url: 'https://images.unsplash.com/photo-1520607162513-77705c0f0d4a?auto=format&fit=crop&w=1200&q=80',
+    published_date: '2024-10-02',
+    category: 'R&D',
+    author: 'Innovation Lab',
+    is_featured: false,
+  },
+];
+
 export default function News() {
   const [news, setNews] = useState<NewsItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [statusMessage, setStatusMessage] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!isSupabaseConfigured || !supabase) {
-      setErrorMessage('News is temporarily unavailable.');
+    const supabaseReady = isSupabaseConfigured && Boolean(supabase);
+    if (!supabaseReady) {
+      setNews(fallbackNews);
+      setStatusMessage('Live feed unavailable - showing featured updates.');
       setLoading(false);
-      return;
+    } else {
+      fetchNews();
     }
-
-    fetchNews();
   }, []);
 
   const fetchNews = async () => {
     if (!supabase) {
-      setErrorMessage('News is temporarily unavailable.');
+      setNews(fallbackNews);
+      setStatusMessage('Live feed unavailable - showing featured updates.');
       setLoading(false);
       return;
     }
@@ -43,10 +81,18 @@ export default function News() {
         .limit(3);
 
       if (error) throw error;
-      setNews(data || []);
+
+      if (data && data.length > 0) {
+        setNews(data);
+        setStatusMessage(null);
+      } else {
+        setNews(fallbackNews);
+        setStatusMessage('Live news coming soon - sharing featured updates meanwhile.');
+      }
     } catch (error) {
       console.error('Error fetching news:', error);
-      setErrorMessage('News is temporarily unavailable.');
+      setNews(fallbackNews);
+      setStatusMessage('Live news temporarily unavailable - showing featured updates.');
     } finally {
       setLoading(false);
     }
@@ -81,69 +127,67 @@ export default function News() {
           </p>
         </div>
 
-        {errorMessage ? (
-          <div className="text-center text-ipeng-light">{errorMessage}</div>
-        ) : (
-          <>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {news.map((item) => (
-                <article
-                  key={item.id}
-                  className="group bg-white/5 backdrop-blur-sm rounded-lg overflow-hidden border border-white/10 hover:border-ipeng-blue/50 transition-all duration-300 hover:transform hover:scale-[1.02]"
-                >
-                  {item.image_url && (
-                    <div className="relative h-48 overflow-hidden">
-                      <img
-                        src={item.image_url}
-                        alt={item.title}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-                      />
-                      {item.is_featured && (
-                        <div className="absolute top-4 right-4 bg-ipeng-blue text-white text-xs font-bold px-3 py-1 rounded-full">
-                          FEATURED
-                        </div>
-                      )}
+        {statusMessage && (
+          <div className="text-center text-ipeng-light mb-10">{statusMessage}</div>
+        )}
+
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {news.map((item) => (
+            <article
+              key={item.id}
+              className="group bg-white/5 backdrop-blur-sm rounded-lg overflow-hidden border border-white/10 hover:border-ipeng-blue/50 transition-all duration-300 hover:transform hover:scale-[1.02]"
+            >
+              {item.image_url && (
+                <div className="relative h-48 overflow-hidden">
+                  <img
+                    src={item.image_url}
+                    alt={item.title}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                  />
+                  {item.is_featured && (
+                    <div className="absolute top-4 right-4 bg-ipeng-blue text-white text-xs font-bold px-3 py-1 rounded-full">
+                      FEATURED
                     </div>
                   )}
+                </div>
+              )}
 
-                  <div className="p-6">
-                    <div className="flex items-center gap-4 mb-3 text-sm text-ipeng-light">
-                      <div className="flex items-center gap-1">
-                        <Calendar className="w-4 h-4" />
-                        <span>{formatDate(item.published_date)}</span>
-                      </div>
-                      {item.category && (
-                        <div className="flex items-center gap-1">
-                          <Tag className="w-4 h-4" />
-                          <span>{item.category}</span>
-                        </div>
-                      )}
-                    </div>
-
-                    <h3 className="text-xl font-bold text-white mb-3 group-hover:text-ipeng-blue transition-colors">
-                      {item.title}
-                    </h3>
-
-                    <p className="text-ipeng-light leading-relaxed line-clamp-3">
-                      {item.description}
-                    </p>
-
-                    {item.author && (
-                      <div className="mt-4 pt-4 border-t border-white/10">
-                        <p className="text-sm text-ipeng-light">By {item.author}</p>
-                      </div>
-                    )}
+              <div className="p-6">
+                <div className="flex items-center gap-4 mb-3 text-sm text-ipeng-light">
+                  <div className="flex items-center gap-1">
+                    <Calendar className="w-4 h-4" />
+                    <span>{formatDate(item.published_date)}</span>
                   </div>
-                </article>
-              ))}
-            </div>
+                  {item.category && (
+                    <div className="flex items-center gap-1">
+                      <Tag className="w-4 h-4" />
+                      <span>{item.category}</span>
+                    </div>
+                  )}
+                </div>
 
-            {news.length === 0 && (
-              <div className="text-center text-ipeng-light">
-                No news items available at this time.
+                <h3 className="text-xl font-bold text-white mb-3 group-hover:text-ipeng-blue transition-colors">
+                  {item.title}
+                </h3>
+
+                <p className="text-ipeng-light leading-relaxed line-clamp-3">
+                  {item.description}
+                </p>
+
+                {item.author && (
+                  <div className="mt-4 pt-4 border-t border-white/10">
+                    <p className="text-sm text-ipeng-light">By {item.author}</p>
+                  </div>
+                )}
               </div>
-            )}
-          </>
+            </article>
+          ))}
+        </div>
+
+        {news.length === 0 && (
+          <div className="text-center text-ipeng-light">
+            No news items available at this time.
+          </div>
         )}
       </div>
     </section>
