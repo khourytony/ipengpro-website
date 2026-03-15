@@ -9,7 +9,8 @@ const normalizeBase = (base: string) => {
 
 const repoName = process.env.GITHUB_REPOSITORY?.split('/')[1];
 const isGitHubPagesBuild = process.env.GITHUB_ACTIONS === 'true' && repoName;
-const basePath = normalizeBase(process.env.BASE_PATH ?? (isGitHubPagesBuild ? `/${repoName}/` : '/'));
+const envBasePath = process.env.BASE_PATH?.trim();
+const basePath = normalizeBase(envBasePath || (isGitHubPagesBuild ? `/${repoName}/` : '/'));
 
 // https://vitejs.dev/config/
 export default defineConfig({

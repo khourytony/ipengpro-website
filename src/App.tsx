@@ -8,6 +8,12 @@ import DigitalTransformation from './pages/DigitalTransformation';
 import NetworkEngineering from './pages/NetworkEngineering';
 import InfrastructureSolutions from './pages/InfrastructureSolutions';
 
+const normalizeBasename = (base: string | undefined) => {
+  if (!base) return '/';
+  const trimmed = base.trim().replace(/\/+$/, '');
+  return trimmed || '/';
+};
+
 function ScrollToTop() {
   const { pathname, state } = useLocation();
 
@@ -22,7 +28,7 @@ function ScrollToTop() {
 }
 
 function App() {
-  const basename = (import.meta.env.BASE_URL || '/').replace(/\/$/, '') || '/';
+  const basename = normalizeBasename(import.meta.env.BASE_URL);
 
   return (
     <Router basename={basename}>
