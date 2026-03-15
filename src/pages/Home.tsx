@@ -6,7 +6,6 @@ import About from '../components/About';
 import Services from '../components/Services';
 import Features from '../components/Features';
 import Projects from '../components/Projects';
-import News from '../components/News';
 import GlobalPresence from '../components/GlobalPresence';
 import Footer from '../components/Footer';
 
@@ -31,7 +30,6 @@ export default function Home() {
       <Services />
       <Features />
       <Projects />
-      <News />
       <GlobalPresence />
       <Footer />
     </>
