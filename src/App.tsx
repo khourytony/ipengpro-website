@@ -22,7 +22,7 @@ function ScrollToTop() {
 }
 
 function App() {
-  const basename = import.meta.env.BASE_URL || '/';
+  const basename = (import.meta.env.BASE_URL || '/').replace(/\/$/, '') || '/';
 
   return (
     <Router basename={basename}>
